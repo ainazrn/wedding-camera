@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Our Wedding Camera</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="container">
+
+    <header class="header">
+      <p class="small-title">WELCOME TO OUR WEDDING</p>
+
+      <h1>Our Wedding Camera</h1>
+
+      <p>
+        Capture a little moment and keep it as a memory.
+      </p>
+    </header>
+
+    <section class="camera-card">
+
+      <div class="camera-area">
+
+        <!-- Live camera preview -->
+        <video
+          id="camera"
+          autoplay
+          playsinline
+          muted
+        ></video>
+
+        <!-- Captured photo preview -->
+        <img
+          id="photo"
+          alt="Your captured wedding photo"
+          hidden
+        >
+
+        <!-- Used to create the photo -->
+        <canvas id="canvas" hidden></canvas>
+
+      </div>
+
+      <p id="message" class="message">
+        Tap “Start Camera” and allow camera access.
+      </p>
+
+      <div class="button-group">
+
+        <button id="startBtn" class="btn btn-secondary">
+          Start Camera
+        </button>
+
+        <button id="switchBtn" class="btn btn-secondary" hidden>
+          Switch Camera
+        </button>
+
+        <button id="captureBtn" class="btn btn-primary" hidden>
+          Take Photo
+        </button>
+
+        <button id="retakeBtn" class="btn btn-secondary" hidden>
+          Retake
+        </button>
+
+        <button id="downloadBtn" class="btn btn-primary" hidden>
+          Download Photo
+        </button>
+
+      </div>
+
+    </section>
+
+    <footer>
+      Made with love for our special day ♡
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
