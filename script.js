@@ -1,3 +1,6 @@
+// Google Apps Script web app URL
+const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbycOVcRxvQeVwkeixLfJ_pVufVGeSjibt3WbwdWN1rYyb84sx0GzoiJkcEJnQXkRKoW/exec";
+
 // Get elements from the HTML page
 const camera = document.getElementById("camera");
 const photo = document.getElementById("photo");
@@ -10,6 +13,7 @@ const switchBtn = document.getElementById("switchBtn");
 const captureBtn = document.getElementById("captureBtn");
 const retakeBtn = document.getElementById("retakeBtn");
 const downloadBtn = document.getElementById("downloadBtn");
+const uploadBtn = document.getElementById("uploadBtn");
 
 // Store the active camera stream
 let cameraStream = null;
@@ -65,6 +69,7 @@ async function startCamera() {
 
     retakeBtn.hidden = true;
     downloadBtn.hidden = true;
+    uploadBtn.hidden = true;
 
     message.textContent = "Smile! Tap “Take Photo” when ready.";
   } catch (error) {
@@ -121,6 +126,7 @@ function takePhoto() {
 
   retakeBtn.hidden = false;
   downloadBtn.hidden = false;
+  uploadBtn.hidden = false;
 
   message.textContent =
     "Your photo is ready! Download it or take another one.";
@@ -171,6 +177,7 @@ retakeBtn.addEventListener("click", () => {
 
   retakeBtn.hidden = true;
   downloadBtn.hidden = true;
+  uploadBtn.hidden = true;
 
   switchBtn.hidden = false;
   captureBtn.hidden = false;
@@ -179,3 +186,76 @@ retakeBtn.addEventListener("click", () => {
 });
 
 downloadBtn.addEventListener("click", downloadPhoto);
+
+// Send the captured photo to Google Apps Script.
+async function uploadPhoto() {
+  if (!photo.src || photo.hidden) {
+    message.textContent = "Please take a photo first.";
+    return;
+  }
+
+  if (
+    !UPLOAD_URL ||
+    UPLOAD_URL.includes("PASTE_YOUR_WEB_APP_URL_HERE")
+  ) {
+    message.textContent = "The upload URL has not been configured.";
+    return;
+  }
+
+  // Check the approximate JPEG size before sending.
+  const base64Data = photo.src.split(",")[1];
+
+  if (!base64Data) {
+    message.textContent = "Could not read the captured photo.";
+    return;
+  }
+
+  const approximateBytes = Math.ceil(base64Data.length * 3 / 4);
+  const maxBytes = 5 * 1024 * 1024;
+
+  if (approximateBytes > maxBytes) {
+    message.textContent =
+      "This photo is too large to upload. Please take another photo.";
+    return;
+  }
+
+  uploadBtn.disabled = true;
+  retakeBtn.disabled = true;
+  downloadBtn.disabled = true;
+
+  message.textContent = "Sending your photo. Please wait...";
+
+  try {
+    await fetch(UPLOAD_URL, {
+      method: "POST",
+
+      // This allows the browser to send the request to Apps Script,
+      // but the response cannot be read by this basic version.
+      mode: "no-cors",
+
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+
+      body: JSON.stringify({
+        photo: photo.src
+      })
+    });
+
+    message.textContent =
+      "Photo submitted. Please check the Google Drive folder to confirm it was saved.";
+
+  } catch (error) {
+    console.error("Upload error:", error);
+
+    message.textContent =
+      "Could not send the photo. Check your internet connection and try again.";
+
+  } finally {
+    uploadBtn.disabled = false;
+    retakeBtn.disabled = false;
+    downloadBtn.disabled = false;
+  }
+}
+
+uploadBtn.addEventListener("click", uploadPhoto);
