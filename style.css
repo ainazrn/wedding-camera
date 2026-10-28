@@ -116,3 +116,70 @@ footer {
   font-size: 13px;
   color: #a6968f;
 }
+
+.gallery-section {
+  margin-top: 32px;
+  padding: 24px 16px;
+
+  background: #ffffff;
+  border-radius: 20px;
+
+  box-shadow: 0 10px 30px rgba(80, 60, 50, 0.08);
+}
+
+.gallery-section h2 {
+  margin: 0 0 10px;
+
+  font-family: Georgia, serif;
+  font-size: 27px;
+  font-weight: normal;
+}
+
+.gallery-description {
+  margin-bottom: 18px;
+
+  color: #897a74;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.gallery-item {
+  margin: 0;
+  padding: 7px;
+
+  background: #f8f3f0;
+  border-radius: 12px;
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Show the complete framed photo in the preview. */
+.camera-area #photo {
+  object-fit: contain;
+  background: #fff9f2;
+}
+
+/* Show the complete frame in the gallery. */
+.gallery-item img {
+  aspect-ratio: 1200 / 1480;
+  object-fit: contain;
+  background: #fff9f2;
+}

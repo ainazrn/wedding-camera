@@ -1,3 +1,19 @@
+// Load the transparent Canva frame.
+const weddingFrame = new Image();
+
+const weddingFrameReady = new Promise((resolve, reject) => {
+  weddingFrame.onload = () => resolve(weddingFrame);
+
+  weddingFrame.onerror = () => {
+    reject(new Error("Could not load wedding-frame.png"));
+  };
+});
+
+weddingFrame.src = "./wedding-frame.png";
+
+// Prevent an unhandled error if the image fails before capture.
+weddingFrameReady.catch(() => {});
+
 // Google Apps Script web app URL
 const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbycOVcRxvQeVwkeixLfJ_pVufVGeSjibt3WbwdWN1rYyb84sx0GzoiJkcEJnQXkRKoW/exec";
 
@@ -95,41 +111,107 @@ async function startCamera() {
 }
 
 // Take a photo from the current video
-function takePhoto() {
+async function takePhoto() {
   if (!camera.videoWidth || !camera.videoHeight) {
-    message.textContent = "The camera is still loading. Please try again.";
+    message.textContent =
+      "The camera is still loading. Please try again.";
+
     return;
   }
 
-  // Save the full camera image
-  canvas.width = camera.videoWidth;
-  canvas.height = camera.videoHeight;
+  captureBtn.disabled = true;
+  switchBtn.disabled = true;
 
-  const context = canvas.getContext("2d");
+  message.textContent = "Preparing your framed photo...";
 
-  context.drawImage(
-    camera,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+  try {
+    await weddingFrameReady;
 
-  // Convert the canvas into an image
-  photo.src = canvas.toDataURL("image/jpeg", 0.9);
+    // Use a consistent output size.
+    canvas.width = 1200;
+    canvas.height = 1480;
 
-  camera.hidden = true;
-  photo.hidden = false;
+    const context = canvas.getContext("2d");
 
-  switchBtn.hidden = true;
-  captureBtn.hidden = true;
+    // Background behind any transparent parts.
+    context.fillStyle = "#FFF9F2";
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-  retakeBtn.hidden = false;
-  downloadBtn.hidden = false;
-  uploadBtn.hidden = false;
+    // Photo opening, measured from your uploaded Canva design.
+    const photoX = 85;
+    const photoY = 62;
+    const photoWidth = 1022;
+    const photoHeight = 1019;
 
-  message.textContent =
-    "Your photo is ready! Download it or take another one.";
+    const videoWidth = camera.videoWidth;
+    const videoHeight = camera.videoHeight;
+
+    // Crop the camera image to fill the opening without stretching.
+    const targetRatio = photoWidth / photoHeight;
+    const videoRatio = videoWidth / videoHeight;
+
+    let sourceWidth;
+    let sourceHeight;
+
+    if (videoRatio > targetRatio) {
+      sourceHeight = videoHeight;
+      sourceWidth = videoHeight * targetRatio;
+    } else {
+      sourceWidth = videoWidth;
+      sourceHeight = videoWidth / targetRatio;
+    }
+
+    const sourceX = (videoWidth - sourceWidth) / 2;
+    const sourceY = (videoHeight - sourceHeight) / 2;
+
+    // Draw the guest's photo first.
+    context.drawImage(
+      camera,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      photoX,
+      photoY,
+      photoWidth,
+      photoHeight
+    );
+
+    // Draw the transparent wedding frame over the photo.
+    context.drawImage(
+      weddingFrame,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    // Save the combined photo and frame as a JPEG.
+    photo.src = canvas.toDataURL("image/jpeg", 0.9);
+
+    camera.hidden = true;
+    photo.hidden = false;
+
+    switchBtn.hidden = true;
+    captureBtn.hidden = true;
+
+    retakeBtn.hidden = false;
+    downloadBtn.hidden = false;
+    uploadBtn.hidden = false;
+
+    message.textContent =
+      "Your framed photo is ready! Download it or upload it to our wedding album.";
+
+  } catch (error) {
+    console.error("Frame error:", error);
+
+    message.textContent =
+      "Could not create the framed photo. Make sure wedding-frame.png is beside index.html, then refresh.";
+
+  } finally {
+    captureBtn.disabled = false;
+    switchBtn.disabled = false;
+  }
 }
 
 // Switch between front and back camera
@@ -259,3 +341,139 @@ async function uploadPhoto() {
 }
 
 uploadBtn.addEventListener("click", uploadPhoto);
+
+// Wedding gallery elements
+const galleryGrid = document.getElementById("galleryGrid");
+const galleryMessage = document.getElementById("galleryMessage");
+const refreshGalleryBtn = document.getElementById("refreshGalleryBtn");
+
+let galleryLoading = false;
+let galleryScript = null;
+let galleryTimeout = null;
+
+
+// Clean up after a gallery request.
+function finishGalleryRequest() {
+  clearTimeout(galleryTimeout);
+
+  if (galleryScript) {
+    galleryScript.remove();
+    galleryScript = null;
+  }
+
+  galleryLoading = false;
+  refreshGalleryBtn.disabled = false;
+}
+
+
+// Apps Script calls this function with the gallery data.
+window.weddingGalleryCallback = function (data) {
+  finishGalleryRequest();
+
+  if (!data || !data.success || !Array.isArray(data.photos)) {
+    galleryMessage.textContent =
+      "Could not load the gallery. Please try again.";
+
+    return;
+  }
+
+  galleryGrid.replaceChildren();
+
+  data.photos.forEach((item, index) => {
+    // Only display supported image data.
+    if (
+      !item ||
+      typeof item.image !== "string" ||
+      !/^data:image\/(jpeg|png|gif);base64,/.test(item.image)
+    ) {
+      return;
+    }
+
+    const card = document.createElement("figure");
+    card.className = "gallery-item";
+
+    const image = document.createElement("img");
+    image.src = item.image;
+    image.alt = "Wedding guest photo " + (index + 1);
+    image.loading = "lazy";
+
+    card.appendChild(image);
+    galleryGrid.appendChild(card);
+  });
+
+  const displayedCount = galleryGrid.children.length;
+
+  if (displayedCount === 0) {
+    galleryMessage.textContent = data.pendingThumbnails
+      ? "New photos are being prepared. Please refresh again shortly."
+      : "No photos yet. Be the first to share a moment!";
+
+    return;
+  }
+
+  galleryMessage.textContent =
+    "Showing " + displayedCount + " recent photo previews.";
+
+  if (data.pendingThumbnails > 0) {
+    galleryMessage.textContent +=
+      " Some new photos are still being prepared.";
+  }
+};
+
+
+// Request gallery data from Apps Script.
+function loadGallery() {
+  if (galleryLoading) {
+    return;
+  }
+
+  if (
+    !UPLOAD_URL ||
+    UPLOAD_URL.includes("PASTE_YOUR_WEB_APP_URL_HERE")
+  ) {
+    galleryMessage.textContent =
+      "Please configure the Google Apps Script URL first.";
+
+    return;
+  }
+
+  galleryLoading = true;
+  refreshGalleryBtn.disabled = true;
+
+  galleryMessage.textContent = "Loading wedding photos...";
+
+  const url = new URL(UPLOAD_URL);
+
+  url.searchParams.set("action", "gallery");
+  url.searchParams.set("callback", "weddingGalleryCallback");
+
+  // Ask for a fresh response.
+  url.searchParams.set("t", Date.now().toString());
+
+  galleryScript = document.createElement("script");
+  galleryScript.src = url.toString();
+
+  galleryScript.onerror = function () {
+    finishGalleryRequest();
+
+    galleryMessage.textContent =
+      "Could not connect to the gallery. Please try again.";
+  };
+
+  galleryTimeout = setTimeout(() => {
+    finishGalleryRequest();
+
+    galleryMessage.textContent =
+      "The gallery is taking too long. Please try refreshing.";
+  }, 45000);
+
+  document.body.appendChild(galleryScript);
+}
+
+
+// Refresh when the guest taps the button.
+refreshGalleryBtn.addEventListener("click", loadGallery);
+
+
+// Load the gallery when the page opens.
+loadGallery();
