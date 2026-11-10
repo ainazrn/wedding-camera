@@ -1,23 +1,21 @@
-HAFIY & AINA — COLOURFUL WEDDING CAMERA
+WEDDING CAMERA — VERSION 2
 
-Replace index.html, style.css and script.js in your existing GitHub repository.
-Keep wedding-frame.png beside index.html (the original PNG is included unchanged).
-Upload the four files themselves into the repository root, not the enclosing folder.
-Commit to main; wait for Pages deployment; hard-refresh the site.
-No Google Apps Script changes are needed. The original endpoint is retained.
+Upload ALL SIX files to your existing GitHub repository root:
+index.html, style.css, script.js, gallery.html, gallery.js, wedding-frame.png.
+Replace existing files; add the two new gallery files. Commit and refresh.
+Use the same six files in your VS Code project, then Open with Live Server.
+No Google Apps Script changes needed. Existing endpoint and gallery protocol retained.
 
-Features: five frames, five filters, single/2-grid/4-grid, countdown for each shot,
-front/back switch, frame/filter changes after capture, phone share/download,
-existing Drive upload and gallery. Four additional frames are canvas illustrations;
-Garden Party is your supplied Canva PNG. 2-grid stacks two separate photos;
-4-grid uses two rows/two columns. Changing layout requires a new capture.
+CHANGES
+- Only Single and 4-grid Polaroid layouts remain.
+- 4-grid captures four different photos, each in a cream Polaroid mat with a
+  square image and small caption, arranged 2 by 2 inside the selected floral frame.
+- Wedding album lives at gallery.html; camera page has links to it.
+- Camera page does not request gallery data. Gallery page does not request camera access.
+- Saved/uploaded JPEG includes all four Polaroids and the chosen floral frame.
 
-On iPhone Safari, Save photo opens the share sheet where supported: choose Save
-Image. Otherwise the JPEG downloads to Files/Downloads. Allow camera access.
-Run locally using Live Server/localhost; guests need the HTTPS Pages address.
-
-Your existing backend uses no-cors submission: the app cannot confirm server-side
-saving. Check the album/Drive before retrying. Gallery still shows up to 12 recent
-thumbnails, according to your unchanged Apps Script. No auto-upload occurs.
-Frames/filters are baked into saved and uploaded JPEGs. Camera access needs HTTPS.
-The preview centre-crops photos. Flowers can overlap the edge of a face: stay centred.
+Keep the page open during the countdown. Changing layout starts a fresh set.
+Save photo uses the phone share sheet when supported; choose Save Image on iPhone.
+Otherwise check Downloads. Five frames and five filters are retained.
+Upload remains a no-cors submission: check album/Drive to confirm receipt.
+The unchanged backend returns up to 12 recent thumbnail previews.
