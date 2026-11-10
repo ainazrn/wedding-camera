@@ -19,3 +19,6 @@ Save photo uses the phone share sheet when supported; choose Save Image on iPhon
 Otherwise check Downloads. Five frames and five filters are retained.
 Upload remains a no-cors submission: check album/Drive to confirm receipt.
 The unchanged backend returns up to 12 recent thumbnail previews.
+
+THEME UPDATE: Classic Malay. Both pages use background #5B6E2C, ivory panels,
+antique gold borders and serif headings. Camera features and photo frames unchanged.
