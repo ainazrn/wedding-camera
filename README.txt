@@ -1,10 +1,9 @@
-WELCOME PAGE UPDATE
-Upload every file in this folder to the root of your GitHub repository.
-index.html is now the invitation cover. camera.html is the photo booth.
-gallery.html remains the separate wedding album. Include welcome-envelope.png.
-Open your usual website address to see the cover; tap Sentuh untuk buka to enter.
-Background remains #5B6E2C. Names: Hafiy & Aina. Date: 2 Januari 2027.
-No music is included because no audio file was supplied. The seal opens the camera.
-Original camera, filters, single/4-grid and Drive connection are preserved.
-Generated artwork: cream envelope, lace heart, orchids, antique gold bow;
-created using the built-in image generator. No couple photograph is used.
+WEDDING MENU UPDATE
+Upload all files in this ZIP directly into your repository root, replacing matches.
+New flow: index.html (cover) → menu.html (guest name + menu) → camera.html OR gallery.html.
+Include menu.html, menu.js and menu-collage.png, plus all existing files.
+Background remains #5B6E2C. Date: 2 Januari 2027. Couple: Hafiy & Aina.
+Optional guest name is stored only in the current browser session, used in a
+camera greeting. It is not added to Drive metadata or used for photo ownership.
+No music file is included. Camera/upload/gallery backend requires no changes.
+Generated collage asset: gold oval, orchids, lace cards and envelope, built-in imagegen.

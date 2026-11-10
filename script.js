@@ -50,3 +50,5 @@ window.addEventListener('pagehide',()=>{stopCamera();cancelAnimationFrame(raf);}
 window.addEventListener('pageshow',e=>{if(e.persisted){setButtons();raf=requestAnimationFrame(animate);}});
 buildFrames();buildFilters();buildLayouts();renderPreview();raf=requestAnimationFrame(animate);
 
+
+try { const guest = sessionStorage.getItem('weddingGuestName'); if (guest) message.textContent = 'Selamat datang, ' + guest + '! Pilih bingkai, kemudian buka kamera.'; } catch (e) {}
