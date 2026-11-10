@@ -7,3 +7,10 @@ Optional guest name is stored only in the current browser session, used in a
 camera greeting. It is not added to Drive metadata or used for photo ownership.
 No music file is included. Camera/upload/gallery backend requires no changes.
 Generated collage asset: gold oval, orchids, lace cards and envelope, built-in imagegen.
+
+CAMERA SCREEN UPDATE
+Ambil Gambar opens camera.html: large preview, horizontal frame tabs, five
+circular filter previews, round shutter, Single/4-grid selector and album link.
+Tap Buka kamera to grant access. Frame/filter previews update before capture.
+Existing five floral frames preserved; the supplied examples guide screen layout.
+Camera permissions are requested only after tapping Buka kamera.
