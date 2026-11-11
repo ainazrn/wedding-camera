@@ -1,16 +1,17 @@
-WEDDING MENU UPDATE
-Upload all files in this ZIP directly into your repository root, replacing matches.
-New flow: index.html (cover) → menu.html (guest name + menu) → camera.html OR gallery.html.
-Include menu.html, menu.js and menu-collage.png, plus all existing files.
-Background remains #5B6E2C. Date: 2 Januari 2027. Couple: Hafiy & Aina.
-Optional guest name is stored only in the current browser session, used in a
-camera greeting. It is not added to Drive metadata or used for photo ownership.
-No music file is included. Camera/upload/gallery backend requires no changes.
-Generated collage asset: gold oval, orchids, lace cards and envelope, built-in imagegen.
+CUSTOM FRAMES — POLKA / STICKER / LACE
 
-CAMERA SCREEN UPDATE
-Ambil Gambar opens camera.html: large preview, horizontal frame tabs, five
-circular filter previews, round shutter, Single/4-grid selector and album link.
-Tap Buka kamera to grant access. Frame/filter previews update before capture.
-Existing five floral frames preserved; the supplied examples guide screen layout.
-Camera permissions are requested only after tapping Buka kamera.
+The old choices are replaced by your three designs in this order:
+Polka = uploaded 4.png; Sticker = uploaded 5.png; Lace = uploaded 3.png.
+Your uploaded artwork is unchanged. The browser makes its bright green photo
+opening transparent during rendering, including green lace holes.
+Single and 4-grid Polaroid both fit the selected frame opening.
+
+Upload all files inside this folder to your GitHub repository root. Replace matches.
+The new frame-polka.png, frame-sticker.png, frame-lace.png must be beside camera.html.
+For VS Code copy the same files into the project and open with Live Server.
+No Apps Script changes needed. Your upload URL is retained.
+Background remains #5B6E2C; mobile width fixes are included.
+Existing album photos retain their old frames. Only new captures use these designs.
+
+Minimum changed files: script.js, camera.html and the three new frame PNGs.
+style.css is included with the previous mobile fix; uploading all supplied files is easiest.
