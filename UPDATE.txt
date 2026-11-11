@@ -1,0 +1,1 @@
+Replace style.css and gallery.html in your website folder, then upload both to GitHub. The album now shows four columns on phone and desktop. No Apps Script changes required for this layout update. Names and wishes remain under each photo when available.
