@@ -4,9 +4,10 @@ const $ = id => document.getElementById(id);
 const camera=$('camera'), photo=$('photo'), canvas=$('canvas'), preview=$('preview'), message=$('message');
 const startBtn=$('startBtn'),switchBtn=$('switchBtn'),captureBtn=$('captureBtn'),retakeBtn=$('retakeBtn'),downloadBtn=$('downloadBtn'),uploadBtn=$('uploadBtn');
 const frames=[
-{name:'Polka',file:'frame-polka.png',bg:'#80553d',ink:'#705246',area:{x:180,y:318,w:850,h:834}},
-{name:'Sticker',file:'frame-sticker.png',bg:'#80553d',ink:'#705246',area:{x:180,y:318,w:850,h:864}},
-{name:'Lace',file:'frame-lace.png',bg:'#80553d',ink:'#705246',area:{x:180,y:318,w:850,h:864}}
+{name:'Lace',file:'frame-lace.png?v=frames-5',bg:'#80553d',ink:'#705246',area:{x:85,y:257,w:1018,h:985}},
+{name:'Polka',file:'frame-polka.png?v=frames-5',bg:'#80553d',ink:'#705246',area:{x:77,y:86,w:1038,h:1096}},
+{name:'Sticker',file:'frame-sticker.png?v=frames-5',bg:'#80553d',ink:'#705246',area:{x:120,y:120,w:975,h:1062}},
+{name:'Scallop',file:'frame-scallop.png?v=frames-5',bg:'#80553d',ink:'#705246',area:{x:110,y:294,w:986,h:906}}
 ];
 const filters=['Original','Warm','Soft','Vintage','Black & White'];
 let frameIndex=0,filterIndex=0,layout=1,shots=[],stream=null,facing='user',busy=false,completed=false,saveFile=null,raf=0,lastPaint=0;
@@ -15,7 +16,7 @@ let area=frames[0].area;
 function prepareFrame(image){const surface=document.createElement('canvas');surface.width=1200;surface.height=1480;const c=surface.getContext('2d',{willReadFrequently:true});c.drawImage(image,0,0,1200,1480);const pixels=c.getImageData(0,0,1200,1480),d=pixels.data;
 for(let i=0;i<d.length;i+=4){const r=d[i],g=d[i+1],b=d[i+2],dominance=g-Math.max(r,b);if(g>125&&dominance>65){const opacity=1-Math.min(1,Math.max(0,(dominance-65)/95));d[i+3]=Math.round(d[i+3]*opacity);if(opacity>0&&opacity<1)d[i+1]=Math.min(g,Math.max(r,b)+12);}}
 c.putImageData(pixels,0,0);return surface;}
-frames.forEach((f,i)=>{const image=new Image();image.onload=()=>{try{f.overlay=prepareFrame(image);f.loaded=true;if(frameIndex===i)refreshResult();}catch(e){f.error=true;message.textContent='Could not prepare '+f.name+'. Refresh the page and try again.';}};image.onerror=()=>{f.error=true;if(frameIndex===i)message.textContent='Could not load '+f.file+'. Please upload all three frame PNG files.';};image.src='./'+f.file;});
+frames.forEach((f,i)=>{const image=new Image();image.onload=()=>{try{f.overlay=prepareFrame(image);f.loaded=true;if(frameIndex===i)refreshResult();}catch(e){f.error=true;message.textContent='Could not prepare '+f.name+'. Refresh the page and try again.';}};image.onerror=()=>{f.error=true;if(frameIndex===i)message.textContent='Could not load '+f.file+'. Please upload all four frame PNG files.';};image.src='./'+f.file;});
 
 function flower(c,x,y,r,color,turn=0){c.save();c.translate(x,y);c.rotate(turn);c.fillStyle=color;for(let i=0;i<7;i++){c.rotate(Math.PI*2/7);c.beginPath();c.ellipse(0,-r*.62,r*.4,r*.66,0,0,Math.PI*2);c.fill();}c.fillStyle='#b3803e';c.beginPath();c.arc(0,0,r*.23,0,Math.PI*2);c.fill();c.restore();}
 function foliage(c,x,y,flip){c.save();c.translate(x,y);c.scale(flip,1);c.strokeStyle='#809770';c.lineWidth=4;c.beginPath();c.moveTo(0,85);c.quadraticCurveTo(55,0,7,-95);c.stroke();c.fillStyle='#a5b68e';for(let j=0;j<5;j++){c.beginPath();c.ellipse(j%2?32:0,65-j*35,11,27,j%2?.8:-.7,0,Math.PI*2);c.fill();}c.restore();}

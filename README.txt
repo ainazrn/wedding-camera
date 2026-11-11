@@ -1,17 +1,10 @@
-CUSTOM FRAMES — POLKA / STICKER / LACE
-
-The old choices are replaced by your three designs in this order:
-Polka = uploaded 4.png; Sticker = uploaded 5.png; Lace = uploaded 3.png.
-Your uploaded artwork is unchanged. The browser makes its bright green photo
-opening transparent during rendering, including green lace holes.
-Single and 4-grid Polaroid both fit the selected frame opening.
-
-Upload all files inside this folder to your GitHub repository root. Replace matches.
-The new frame-polka.png, frame-sticker.png, frame-lace.png must be beside camera.html.
-For VS Code copy the same files into the project and open with Live Server.
-No Apps Script changes needed. Your upload URL is retained.
-Background remains #5B6E2C; mobile width fixes are included.
-Existing album photos retain their old frames. Only new captures use these designs.
-
-Minimum changed files: script.js, camera.html and the three new frame PNGs.
-style.css is included with the previous mobile fix; uploading all supplied files is easiest.
+UPDATED FOUR FRAMES
+Selection order: Lace, Polka, Sticker, Scallop.
+Your revised PNGs replace the previous designs. The green area is keyed at runtime.
+Both Single and 4-grid Polaroid use each design's measured photo opening.
+Upload all files from this package directly into your repository root, replacing matches.
+The minimum changed files are script.js, camera.html and all four frame-*.png files.
+Include the new frame-scallop.png. Copy the same files into your VS Code project.
+Versioned URLs make browsers request the new frame images and script.
+The #5B6E2C theme, mobile fix, welcome/menu pages and album connection are preserved.
+No Apps Script changes needed. Existing gallery photos keep their earlier frames.
