@@ -1,137 +1,16 @@
 "use strict";
 const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbycOVcRxvQeVwkeixLfJ_pVufVGeSjibt3WbwdWN1rYyb84sx0GzoiJkcEJnQXkRKoW/exec";
-// Wedding gallery elements
-const galleryGrid = document.getElementById("galleryGrid");
-const galleryMessage = document.getElementById("galleryMessage");
-const refreshGalleryBtn = document.getElementById("refreshGalleryBtn");
-
-let galleryLoading = false;
-let galleryScript = null;
-let galleryTimeout = null;
-
-
-// Clean up after a gallery request.
-function finishGalleryRequest() {
-  clearTimeout(galleryTimeout);
-
-  if (galleryScript) {
-    galleryScript.remove();
-    galleryScript = null;
-  }
-
-  galleryLoading = false;
-  refreshGalleryBtn.disabled = false;
-}
-
-
-// Apps Script calls this function with the gallery data.
-window.weddingGalleryCallback = function (data) {
-  finishGalleryRequest();
-
-  if (!data || !data.success || !Array.isArray(data.photos)) {
-    galleryMessage.textContent =
-      "Could not load the gallery. Please try again.";
-
-    return;
-  }
-
-  galleryGrid.replaceChildren();
-
-  data.photos.forEach((item, index) => {
-    // Only display supported image data.
-    if (
-      !item ||
-      typeof item.image !== "string" ||
-      !/^data:image\/(jpeg|png|gif);base64,/.test(item.image)
-    ) {
-      return;
-    }
-
-    const card = document.createElement("figure");
-    card.className = "gallery-item";
-
-    const image = document.createElement("img");
-    image.src = item.image;
-    image.alt = "Wedding guest photo " + (index + 1);
-    image.loading = "lazy";
-
-    card.appendChild(image);
-    galleryGrid.appendChild(card);
-  });
-
-  const displayedCount = galleryGrid.children.length;
-
-  if (displayedCount === 0) {
-    galleryMessage.textContent = data.pendingThumbnails
-      ? "New photos are being prepared. Please refresh again shortly."
-      : "No photos yet. Be the first to share a moment!";
-
-    return;
-  }
-
-  galleryMessage.textContent =
-    "Showing " + displayedCount + " recent photo previews.";
-
-  if (data.pendingThumbnails > 0) {
-    galleryMessage.textContent +=
-      " Some new photos are still being prepared.";
-  }
-};
-
-
-// Request gallery data from Apps Script.
-function loadGallery() {
-  if (galleryLoading) {
-    return;
-  }
-
-  if (
-    !UPLOAD_URL ||
-    UPLOAD_URL.includes("PASTE_YOUR_WEB_APP_URL_HERE")
-  ) {
-    galleryMessage.textContent =
-      "Please configure the Google Apps Script URL first.";
-
-    return;
-  }
-
-  galleryLoading = true;
-  refreshGalleryBtn.disabled = true;
-
-  galleryMessage.textContent = "Loading wedding photos...";
-
-  const url = new URL(UPLOAD_URL);
-
-  url.searchParams.set("action", "gallery");
-  url.searchParams.set("callback", "weddingGalleryCallback");
-
-  // Ask for a fresh response.
-  url.searchParams.set("t", Date.now().toString());
-
-  galleryScript = document.createElement("script");
-  galleryScript.src = url.toString();
-
-  galleryScript.onerror = function () {
-    finishGalleryRequest();
-
-    galleryMessage.textContent =
-      "Could not connect to the gallery. Please try again.";
-  };
-
-  galleryTimeout = setTimeout(() => {
-    finishGalleryRequest();
-
-    galleryMessage.textContent =
-      "The gallery is taking too long. Please try refreshing.";
-  }, 45000);
-
-  document.body.appendChild(galleryScript);
-}
-
-
-// Refresh when the guest taps the button.
-refreshGalleryBtn.addEventListener("click", loadGallery);
-
-
-// Load the gallery when the page opens.
+const $=id=>document.getElementById(id),grid=$('galleryGrid'),statusText=$('galleryMessage'),refreshBtn=$('refreshGalleryBtn'),moreBtn=$('loadMoreBtn');
+let loading=false,scriptNode=null,timeout=null,offset=0,appendMode=false,nextOffset=null;
+function finish(){clearTimeout(timeout);scriptNode?.remove();scriptNode=null;loading=false;refreshBtn.disabled=false;moreBtn.disabled=false;}
+function text(tag,className,value){const node=document.createElement(tag);node.className=className;node.textContent=value;return node;}
+window.weddingGalleryCallback=data=>{finish();if(!data?.success||!Array.isArray(data.photos)){statusText.textContent='Memories could not load. Please try refreshing.';return;}if(!appendMode)grid.replaceChildren();
+for(const item of data.photos){if(typeof item.image!=='string'||!/^data:image\/(jpeg|png|gif);base64,/.test(item.image))continue;const post=document.createElement('article');post.className='feed-post';const head=document.createElement('header');head.className='post-head';const name=String(item.name||'Wedding guest').slice(0,60);head.append(text('span','post-avatar',name.charAt(0).toUpperCase()),text('strong','post-author',name));const image=document.createElement('img');image.src=item.image;image.alt='Wedding memory shared by '+name;image.loading='lazy';image.className='post-photo';const caption=document.createElement('div');caption.className='post-caption';caption.append(text('strong','caption-name',name));if(item.wishes)caption.append(text('p','post-wishes',String(item.wishes).slice(0,500)));else caption.append(text('p','post-wishes no-wish','A little moment from our special day.'));if(item.created){const d=new Date(item.created);if(!Number.isNaN(d.getTime()))caption.append(text('time','post-date',d.toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'})));}post.append(head,image,caption);grid.append(post);}
+nextOffset=Number.isInteger(data.nextOffset)?data.nextOffset:null;moreBtn.hidden=nextOffset===null;statusText.textContent=grid.children.length?grid.children.length+' memories shared with love.':'No memories yet. Share the first one!';if(data.pendingThumbnails)statusText.textContent+=' New photos are being prepared; refresh shortly.';if(data.backendVersion!==2)statusText.textContent+=' Update Apps Script using the included Code.gs to display names and wishes.';};
+function loadGallery(append=false){if(loading)return;appendMode=append;offset=append?(nextOffset||0):0;loading=true;refreshBtn.disabled=true;moreBtn.disabled=true;statusText.textContent='Loading memories…';const url=new URL(UPLOAD_URL);url.search=new URLSearchParams({action:'gallery',callback:'weddingGalleryCallback',offset:String(offset),t:String(Date.now())});scriptNode=document.createElement('script');scriptNode.src=url.toString();scriptNode.onerror=()=>{finish();statusText.textContent='Could not connect. Please refresh or try another browser.';};timeout=setTimeout(()=>{finish();statusText.textContent='Loading took too long. Please refresh.';},45000);document.body.append(scriptNode);}
+refreshBtn.onclick=()=>loadGallery();moreBtn.onclick=()=>loadGallery(true);
+try{$('albumName').value=sessionStorage.getItem('weddingGuestName')||'';$('albumWishes').value=sessionStorage.getItem('weddingGuestWishes')||'';}catch(e){}
+let selectedPhoto=null,reading=false,readVersion=0;
+$('albumFile').onchange=async()=>{const version=++readVersion,file=$('albumFile').files[0];selectedPhoto=null;reading=true;$('albumUploadBtn').disabled=true;$('albumUploadPreview').hidden=true;try{if(!file)return;if(!file.type.startsWith('image/'))throw Error('Choose an image file.');if(file.size>25*1024*1024)throw Error('Choose a photo smaller than 25 MB.');const objectURL=URL.createObjectURL(file);try{const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(Error('This image format could not open. Try a JPEG or PNG.'));image.src=objectURL;});if(version!==readVersion)return;const scale=Math.min(1,1600/Math.max(image.naturalWidth,image.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(image.naturalWidth*scale);c.height=Math.round(image.naturalHeight*scale);const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(image,0,0,c.width,c.height);selectedPhoto=c.toDataURL('image/jpeg',.88);$('albumUploadPreview').src=selectedPhoto;$('albumUploadPreview').hidden=false;$('albumUploadMessage').textContent='Photo ready to share.';}finally{URL.revokeObjectURL(objectURL);}}catch(e){if(version===readVersion)$('albumUploadMessage').textContent=e.message;}finally{if(version===readVersion){reading=false;$('albumUploadBtn').disabled=false;}}};
+$('albumUploadForm').onsubmit=async e=>{e.preventDefault();if(reading||!selectedPhoto){$('albumUploadMessage').textContent='Please choose a photo and wait for its preview.';return;}const name=$('albumName').value.trim().slice(0,60),wishes=$('albumWishes').value.trim().slice(0,500);try{sessionStorage.setItem('weddingGuestName',name);sessionStorage.setItem('weddingGuestWishes',wishes);}catch(e){}const elements=Array.from($('albumUploadForm').elements);elements.forEach(el=>el.disabled=true);$('albumUploadMessage').textContent='Sending your memory…';const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),45000);try{await fetch(UPLOAD_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({photo:selectedPhoto,name,wishes}),signal:controller.signal});$('albumUploadMessage').textContent='Submission sent. Refresh the feed shortly to check it appeared; receipt is not confirmed yet.';}catch(e){$('albumUploadMessage').textContent='Submission could not be confirmed. Check the feed before trying again.';}finally{clearTimeout(timer);elements.forEach(el=>el.disabled=false);}};
 loadGallery();
