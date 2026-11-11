@@ -1,10 +1,11 @@
-UPDATED FOUR FRAMES
-Selection order: Lace, Polka, Sticker, Scallop.
-Your revised PNGs replace the previous designs. The green area is keyed at runtime.
-Both Single and 4-grid Polaroid use each design's measured photo opening.
-Upload all files from this package directly into your repository root, replacing matches.
-The minimum changed files are script.js, camera.html and all four frame-*.png files.
-Include the new frame-scallop.png. Copy the same files into your VS Code project.
-Versioned URLs make browsers request the new frame images and script.
-The #5B6E2C theme, mobile fix, welcome/menu pages and album connection are preserved.
-No Apps Script changes needed. Existing gallery photos keep their earlier frames.
+PHOTO ACTION BUTTONS UPDATE
+After Single or 4-grid capture, four controls appear in a phone-friendly 2-column grid:
+Retake / Share to Album / Save to Phone / View Album.
+Retake starts a new set; Share sends the finished JPEG to the existing endpoint;
+Save opens supported phone sharing or downloads; View Album opens gallery.html.
+Sharing does not automatically navigate away, so guests can still save their photo.
+
+Replace camera.html, script.js and style.css in VS Code and GitHub.
+All current pages and frame assets are included for convenience.
+Upload files directly into the repository root. No Apps Script changes needed.
+The olive theme, four uploaded frames and mobile width fix are preserved.

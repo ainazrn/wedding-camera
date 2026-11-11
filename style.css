@@ -78,3 +78,9 @@ body{width:100%;min-width:0;margin:0}
 .camera-page .result-actions{min-width:0;max-width:100%}.camera-page .result-actions .btn{max-width:100%;white-space:normal}
 .camera-page .start-overlay{max-width:calc(100% - 32px);white-space:normal;min-height:44px}
 @media(max-width:350px){.camera-shell{width:calc(100% - 16px)}.camera-page .capture-row{grid-template-columns:minmax(0,1fr) 76px minmax(0,1fr);gap:4px}.camera-page .layout-control .pills button{padding:7px 6px;font-size:10px}}
+
+/* Finished-photo actions: available after single or four-photo capture. */
+.camera-page .result-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;margin:12px 0 0;padding:4px 0 14px}
+.camera-page .result-actions .btn{display:flex;align-items:center;justify-content:center;width:100%;min-width:0;min-height:50px;padding:12px 8px;text-decoration:none;text-align:center;font-size:13px;line-height:1.3}
+.camera-page .result-actions .album-outline{background:transparent;border:1px solid #f0dab0;color:#fff1d7}
+@media(max-width:330px){.camera-page .result-actions .btn{font-size:12px}}
