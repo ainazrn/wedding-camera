@@ -1,1 +1,1 @@
-Replace style.css and gallery.html in your website folder, then upload both to GitHub. The album now shows four columns on phone and desktop. No Apps Script changes required for this layout update. Names and wishes remain under each photo when available.
+Replace style.css and gallery.html, then upload both to GitHub. Three equal-sized cards per row on phones and computers. Photo frames stay fully visible. Caption space is reserved even when blank. Long wishes scroll within the caption area. No Apps Script changes needed.
