@@ -14,7 +14,7 @@ for(const item of data.photos){
  print.append(image,label);
  const actions=document.createElement('div');actions.className='post-actions';
  const save=document.createElement('a');save.href=item.image;save.download='hafiy-aina-memory.jpg';save.className='post-save';save.textContent='Save photo';
- actions.append(text('span','post-note','Hafiy & Aina'),save);
+ actions.append(save);
  post.append(print,actions);
  grid.append(post);
 }
