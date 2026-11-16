@@ -114,3 +114,16 @@ body{width:100%;min-width:0;margin:0}
 .feed-shell{max-width:960px}.post-head{gap:8px;padding:12px}.post-avatar{width:30px;height:30px;font-size:10px}.post-author{font-size:14px}.post-tag{display:none}.post-actions{flex-wrap:wrap;padding:12px;font-size:12px;gap:8px}.post-photo{max-height:none}
 @media(max-width:600px){.social-feed{gap:10px}.feed-post{border-radius:12px}.post-head{padding:10px 8px;gap:6px}.post-author{font-size:12px}.post-avatar{width:26px;height:26px;font-size:9px}.post-actions{padding:10px 8px}.post-save{font-size:11px;padding:8px 10px}.post-note{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.open-invitation{transition:none}.open-invitation:hover{transform:none}}
+
+/* Cream polaroid prints, arranged in pairs. */
+.social-feed{gap:30px 22px;padding:12px 8px 24px;align-items:start}
+.feed-post{padding:9px 9px 0;background:#fff9e9;border:1px solid #e6dcc4;border-radius:2px;box-shadow:2px 7px 15px #23301545;transform:rotate(-1.5deg);transform-origin:center;overflow:visible}
+.feed-post:nth-child(even){transform:rotate(1.2deg)}
+.feed-post:nth-child(3n){transform:rotate(-.7deg)}
+.polaroid-print{position:relative;background:#e9e1cc;overflow:hidden}
+.polaroid-print .post-photo{width:100%;height:auto;aspect-ratio:1200/1480;object-fit:contain;background:#e9e1cc}
+.polaroid-label{position:absolute;top:9px;left:8px;max-width:calc(100% - 16px);padding:5px 12px;border:1px solid #fff0ce77;border-radius:20px;background:#5b6e2ce8;color:#fff7df;font:italic 13px Georgia,serif;line-height:1.2}
+.feed-post .post-actions{min-height:74px;padding:12px 4px 13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}
+.feed-post .post-note{font:italic 23px Georgia,serif;color:#75613e;line-height:1.2}
+.feed-post .post-save{border:0;border-radius:0;padding:4px 8px;color:#77745c;font:10px Arial,sans-serif;letter-spacing:1px;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){.social-feed{gap:22px 14px;padding-inline:4px}.feed-post{padding:6px 6px 0;border-radius:2px}.polaroid-label{top:6px;left:5px;padding:4px 8px;font-size:10px}.feed-post .post-actions{min-height:64px;padding:10px 2px;gap:5px}.feed-post .post-note{font-size:18px}.feed-post .post-save{font-size:9px}}

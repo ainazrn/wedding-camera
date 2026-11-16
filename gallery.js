@@ -8,13 +8,14 @@ window.weddingGalleryCallback=data=>{finish();if(!data?.success||!Array.isArray(
 for(const item of data.photos){
  if(typeof item.image!=='string'||!/^data:image\/(jpeg|png|gif);base64,/.test(item.image))continue;
  const post=document.createElement('article');post.className='feed-post';
- const head=document.createElement('header');head.className='post-head';
- head.append(text('span','post-avatar','H&A'),text('strong','post-author','Wedding moments'),text('span','post-tag','OUR DAY'));
  const image=document.createElement('img');image.src=item.image;image.alt='A photo shared from Hafiy and Aina’s wedding';image.loading='lazy';image.className='post-photo';
+ const print=document.createElement('div');print.className='polaroid-print';
+ const label=text('span','polaroid-label','Gambar kita');
+ print.append(image,label);
  const actions=document.createElement('div');actions.className='post-actions';
  const save=document.createElement('a');save.href=item.image;save.download='hafiy-aina-memory.jpg';save.className='post-save';save.textContent='Save photo';
- actions.append(text('span','post-note','A moment to keep'),save);
- post.append(head,image,actions);
+ actions.append(text('span','post-note','Hafiy & Aina'),save);
+ post.append(print,actions);
  grid.append(post);
 }
 nextOffset=Number.isInteger(data.nextOffset)?data.nextOffset:null;moreBtn.hidden=nextOffset===null;statusText.textContent=grid.children.length?grid.children.length+' memories shared with love.':'No memories yet. Share the first one!';if(data.pendingThumbnails)statusText.textContent+=' New photos are being prepared; refresh shortly.';};
