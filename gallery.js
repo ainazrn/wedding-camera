@@ -12,8 +12,8 @@ for(const item of data.photos){
  head.append(text('span','post-avatar','H&A'),text('strong','post-author','Wedding moments'),text('span','post-tag','OUR DAY'));
  const image=document.createElement('img');image.src=item.image;image.alt='A photo shared from Hafiy and Aina’s wedding';image.loading='lazy';image.className='post-photo';
  const actions=document.createElement('div');actions.className='post-actions';
- const save=document.createElement('a');save.href=item.image;save.download='hafiy-aina-memory.jpg';save.className='post-save';save.textContent='↓ Save photo';
- actions.append(text('span','post-note','A moment to keep ♡'),save);
+ const save=document.createElement('a');save.href=item.image;save.download='hafiy-aina-memory.jpg';save.className='post-save';save.textContent='Save photo';
+ actions.append(text('span','post-note','A moment to keep'),save);
  post.append(head,image,actions);
  grid.append(post);
 }

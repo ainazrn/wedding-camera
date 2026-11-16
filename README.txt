@@ -4,9 +4,9 @@ A static wedding photo app. Guests open the camera directly, choose a frame
 and filter, take a photo, then save it or share it to the wedding album.
 No guest name or wishes are collected or displayed, including on older posts.
 
-Layouts: Single photo, or 3-grid: three timed photos in a vertical photobooth
-strip. Each shot retains the selected frame. The strip exports as one JPEG.
-The album is a scrolling photo feed with direct camera access and photo saving.
+The camera takes one photo with a countdown. Guests can choose a frame and
+filter, retake, save, or share. The album displays two photos per row and
+provides photo saving and camera access through the bottom navigation.
 
 LOCAL DEVELOPMENT
 From this folder run: python3 -m http.server 8000 --bind 127.0.0.1
